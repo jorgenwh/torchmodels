@@ -1,0 +1,11 @@
+[project]
+name="torchmodels"
+readme="README.md"
+dependencies=["torch", "numpy"]
+version="1.0.0"
+
+[build-system]
+requires = [
+  "setuptools",
+]
+build-backend = "setuptools.build_meta"
