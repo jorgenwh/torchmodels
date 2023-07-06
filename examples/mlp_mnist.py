@@ -65,6 +65,7 @@ if __name__ == "__main__":
             y = y.to(DEVICE)
 
             y_pred = model(x)
+            y_pred = torch.softmax(y_pred, dim=1)
             _, predicted = torch.max(y_pred.data, 1)
             total += y.size(0)
             correct += (predicted == y).sum().item()
