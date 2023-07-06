@@ -1,30 +1,21 @@
 import torch
 import keras
 
-from torchmodels import ResNet
+from torchmodels import MLP
 
 if __name__ == "__main__":
     # load mnist using keras
     (x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
-    x_train = x_train.reshape(60000, 1, 28, 28).astype('float32') / 255.0
-    x_test = x_test.reshape(10000, 1, 28, 28).astype('float32') / 255.0
+    x_train = x_train.reshape(60000, 784).astype('float32') / 255.0
+    x_test = x_test.reshape(10000, 784).astype('float32') / 255.0
 
     DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    TRAIN_EPOCHS = 2
+    TRAIN_EPOCHS = 4
     BATCH_SIZE = 64
-    CHANNELS = 1
-    HEIGHT = 28
-    WIDTH = 28
-    NUM_RESIDUAL_BLOCKS = 4
     NUM_CLASSES = 10
 
     # Create a ResNet model
-    model = ResNet(
-            in_channels=CHANNELS, 
-            in_height=HEIGHT, 
-            in_width=WIDTH, 
-            num_blocks=NUM_RESIDUAL_BLOCKS, 
-            num_classes=NUM_CLASSES)
+    model = MLP(dimensions=[784, 1024, 512, 256, 128, NUM_CLASSES])
     model = model.to(DEVICE)
 
     # Create a dataloader
@@ -78,4 +69,4 @@ if __name__ == "__main__":
             total += y.size(0)
             correct += (predicted == y).sum().item()
 
-    print(f"Test accuracy: {round(correct / total, 5)}")
+    print(f"Test accuracy: {correct / total}")
