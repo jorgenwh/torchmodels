@@ -14,11 +14,11 @@ if __name__ == "__main__":
     BATCH_SIZE = 64
     NUM_CLASSES = 10
 
-    # Create a ResNet model
+    # create a MLP model
     model = MLP(dimensions=[784, 1024, 512, 256, 128, NUM_CLASSES])
     model = model.to(DEVICE)
 
-    # Create a dataloader
+    # create a dataloader
     train_dataset = torch.utils.data.TensorDataset(
             torch.from_numpy(x_train).float(),
             torch.from_numpy(y_train).long())

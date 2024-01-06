@@ -1,8 +1,11 @@
-.PHONY: all install uninstall clean
+.PHONY: all install dev-install uninstall clean
 
 all: install
 
 install: clean
+	pip install .
+
+dev-install: clean
 	pip install -e .
 
 uninstall: clean

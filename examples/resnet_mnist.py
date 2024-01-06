@@ -12,22 +12,22 @@ if __name__ == "__main__":
     DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     TRAIN_EPOCHS = 2
     BATCH_SIZE = 64
+    LEARNING_RATE = 0.001
     CHANNELS = 1
     HEIGHT = 28
     WIDTH = 28
-    NUM_RESIDUAL_BLOCKS = 4
     NUM_CLASSES = 10
+    NUM_LAYERS = 18     # 18, 34, 50, 101, 152
 
-    # Create a ResNet model
+    # create a ResNet model
     model = ResNet(
+            num_layers=NUM_LAYERS,
             in_channels=CHANNELS, 
-            in_height=HEIGHT, 
-            in_width=WIDTH, 
-            num_blocks=NUM_RESIDUAL_BLOCKS, 
-            num_classes=NUM_CLASSES)
+            num_classes=NUM_CLASSES
+    )
     model = model.to(DEVICE)
 
-    # Create a dataloader
+    # create a dataloader
     train_dataset = torch.utils.data.TensorDataset(
             torch.from_numpy(x_train).float(),
             torch.from_numpy(y_train).long())
@@ -36,7 +36,7 @@ if __name__ == "__main__":
 
     # criterion and optimizer
     criterion = torch.nn.CrossEntropyLoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
+    optimizer = torch.optim.Adam(model.parameters(), lr=LEARNING_RATE)
 
     # training loop
     model.train()
@@ -55,8 +55,8 @@ if __name__ == "__main__":
 
             epoch_loss += loss.item()
 
-            print(f"Epoch: {epoch+1}/{TRAIN_EPOCHS}, Iter: {i}/{len(train_loader)}, Loss: {loss.item() / i}    \r", end="")
-        print(f"Epoch: {epoch+1}/{TRAIN_EPOCHS}, Iter: {i}/{len(train_loader)}, Loss: {loss.item() / i}    ")
+            print(f"epoch: {epoch+1}/{TRAIN_EPOCHS}, iter: {i}/{len(train_loader)}, loss: {round(loss.item() / i, 6)}    \r", end="")
+        print(f"epoch: {epoch+1}/{TRAIN_EPOCHS}, iter: {i}/{len(train_loader)}, loss: {round(loss.item() / i, 6)}    ")
 
     # test
     test_dataset = torch.utils.data.TensorDataset(
@@ -79,4 +79,4 @@ if __name__ == "__main__":
             total += y.size(0)
             correct += (predicted == y).sum().item()
 
-    print(f"Test accuracy: {round(correct / total, 5)}")
+    print(f"test accuracy: {round(correct / total, 5)}")
